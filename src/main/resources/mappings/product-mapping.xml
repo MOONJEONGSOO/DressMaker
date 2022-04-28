@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ProductDAO">
+
+	<resultMap type="product" id="productResult">
+		<id property="pnum" column="pnum"/>
+		<result property="pname" column="pname"/>
+		<result property="pimg" column="pimg"/>
+		<result property="pprice" column="pprice"/>
+		<result property="pinfo" column="pinfo"/>
+		<result property="prental" column="prental"/>
+	</resultMap>
+	<resultMap type="product" id="productResult2">
+		<result property="listcnt" column="listcnt"/>
+	</resultMap>
+	
+	
+	
+	<select id="Product_selectAll" resultType="product">
+		<![CDATA[
+			SELECT * FROM PRODUCT ORDER BY PNUM DESC
+		]]>
+	</select>
+	
+	<select id="Product_selectAll_cnt" resultMap="productResult2">
+		<![CDATA[
+			SELECT COUNT(*) AS LISTCNT FROM PRODUCT
+		]]>
+	</select>
+	
+	<select id="Product_selectAll_page" resultType="product">
+		<![CDATA[
+			SELECT * FROM ( SELECT ROWNUM AS RNUM, A.PNUM, A.PNAME, A.PIMG, A.PPRICE, A.PINFO, A.PRENTAL FROM (SELECT * FROM PRODUCT ORDER BY PNUM DESC) A) WHERE RNUM BETWEEN ((#{page}*6)-5) AND (#{page}*6)
+		]]>
+	</select>
+	
+	<select id="Product_search" resultType="product">
+		<![CDATA[
+			SELECT * FROM PRODUCT WHERE PNAME LIKE '%'||#{psearch}||'%' AND PPRICE BETWEEN #{pprice} AND #{pmax} ORDER BY PNUM DESC
+		]]>
+	</select>
+	
+	<select id="Product_search_cnt" resultType="product">
+		<![CDATA[
+			SELECT COUNT(*) AS LISTCNT FROM PRODUCT WHERE PNAME LIKE '%'||#{psearch}||'%' AND PPRICE BETWEEN #{pprice} AND #{pmax} ORDER BY PNUM DESC
+		]]>
+	</select>
+	<select id="Product_search_page" resultType="product">
+		<![CDATA[
+			SELECT * FROM ( SELECT ROWNUM AS RNUM, A.PNUM, A.PNAME, A.PIMG, A.PPRICE, A.PINFO, A.PRENTAL FROM (SELECT * FROM PRODUCT WHERE PNAME LIKE '%'||#{psearch}||'%' AND PPRICE BETWEEN #{pprice} AND #{pmax} ORDER BY PNUM DESC) A) WHERE RNUM BETWEEN ((#{page}*6)-5) AND (#{page}*6)
+		]]>
+	</select>
+
+	<insert id="Product_insert">
+		<![CDATA[
+			INSERT INTO PRODUCT VALUES((SELECT NVL(MAX(PNUM),0)+1 FROM PRODUCT), #{pname},#{pimg},#{pprice},#{pinfo},'대여가능')
+		]]>
+	</insert>
+
+	<select id="Product_selectOne" resultType="product">
+		<![CDATA[
+			SELECT * FROM PRODUCT WHERE PNUM=#{pnum}
+		]]>
+	</select>
+
+	<update id="Product_update">
+		<![CDATA[
+			UPDATE PRODUCT SET
+		]]> 
+		<if test="prental == '대여가능'">
+			<![CDATA[
+				PRENTAL='대여중'
+			]]> 
+		</if>
+		<if test="prental == '대여중'">
+			<![CDATA[
+				PRENTAL='대여가능'
+			]]> 
+		</if>
+		<![CDATA[
+			WHERE PNUM=#{pnum}
+		]]> 
+		
+	</update>
+
+	<delete id="Product_delete">
+		<![CDATA[
+			DELETE PRODUCT WHERE PNUM=#{pnum}
+		]]>
+	</delete>
+	
+
+</mapper>

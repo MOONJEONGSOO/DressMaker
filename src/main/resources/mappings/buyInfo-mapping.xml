@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="buyInfoDAO">
+
+	<resultMap type="buyInfo" id="buyInfoResult">
+		<id property="inum" column="inum"/>
+		<result property="mid" column="mid"/>
+		<result property="pnum" column="pnum"/>
+	</resultMap>
+	<resultMap type="buyInfo" id="buyInfoResult2">
+		<result property="pname" column="pname"/>
+		<result property="pnum" column="pnum"/>
+	</resultMap>
+
+
+	
+	<insert id="BuyInfo_insert">
+		<![CDATA[
+			INSERT INTO BUYINFO VALUES((SELECT NVL(MAX(INUM),0)+1 FROM BUYINFO),#{mid},#{pnum})
+		]]>	
+	</insert>
+	
+	<select id="BuyInfo_selectAll" resultType="buyInfo">
+		<![CDATA[
+			SELECT * FROM BUYINFO ORDER BY INUM DESC
+		]]>		
+	</select>
+	
+	<select id="BuyInfo_selectAll_v2" resultMap="buyInfoResult2">
+		<![CDATA[
+			SELECT PNAME, BUYINFO.PNUM FROM PRODUCT, BUYINFO WHERE BUYINFO.PNUM=PRODUCT.PNUM AND BUYINFO.MID=#{mid}
+		]]>
+	</select>
+	
+	<delete id="BuyInfo_delete">
+		<![CDATA[
+			DELETE BUYINFO WHERE PNUM=#{pnum} AND MID=#{mid}
+		]]>
+	</delete>
+
+
+	<select id="BuyInfo_search" resultType="buyInfo">
+		<![CDATA[
+			SELECT * FROM BUYINFO WHERE MID=#{mid} ORDER BY INUM DESC
+		]]>
+	</select>
+	
+
+
+
+
+</mapper>

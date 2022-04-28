@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="boardDAO">
+
+	<resultMap type="board" id="boardResult">
+		<id property="bnum" column="bnum"/>
+		<result property="mid" column="mid"/>
+		<result property="btitle" column="btitle"/>
+		<result property="bimg" column="bimg"/>
+		<result property="pnum" column="pnum"/>
+	</resultMap>
+	
+	<select id="Board_pname" resultType="board">
+			<!-- select product.pname from board, product where board.pnum=product.pnum; -->
+		<![CDATA[
+			SELECT PRODUCT.PNAME FROM BOARD, PRODUCT WHERE BOARD.{pnum}=PRODUCT.PNUM
+		]]>
+	</select>
+	
+	
+	
+	<select id="Board_selectOne" resultType="board">
+		<![CDATA[
+			SELECT * FROM BOARD WHERE BNUM=#{bnum}
+		]]>
+	</select>
+
+	<select id="Board_selectAll" resultType="board">
+			<!-- SELECT * FROM BOARD ORDER BY BNUM DESC -->
+		<![CDATA[
+			SELECT BOARD.*, PRODUCT.PNAME FROM BOARD, PRODUCT WHERE BOARD.PNUM=PRODUCT.PNUM ORDER BY BNUM DESC
+		]]>
+	</select>
+	
+	
+	<select id="Board_search" resultType="board">
+		<![CDATA[
+			SELECT * FROM BOARD WHERE PNUM=#{pnum} ORDER BY BNUM DESC
+		]]>
+	</select>
+	
+	
+	
+	<insert id="Board_insert">
+		<![CDATA[
+			INSERT INTO BOARD VALUES((SELECT NVL(MAX(BNUM),0)+1 FROM BOARD),#{mid},#{btitle},#{bcontent},#{bimg},#{pnum})
+		]]>
+	</insert>
+	
+	<!-- <update id="Board_update">
+		<![CDATA[  ]]>	
+	</update> -->
+	
+	<delete id="Board_delete">
+		<![CDATA[
+			DELETE BOARD WHERE BNUM=#{bnum}
+		]]>
+	</delete>
+
+
+
+
+</mapper>

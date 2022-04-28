@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="MemberDAO">
+
+	<resultMap type="member" id="memberResult">
+		<id property="mid" column="mid"/>
+		<result property="mpw" column="mpw"/>
+		<result property="mname" column="mname"/>
+		<result property="mmail" column="mmail"/>
+	</resultMap>
+
+
+
+	<select id="Member_checkId" resultType="member">
+		<![CDATA[
+			SELECT * FROM MEMBER WHERE MID=#{mid}
+		]]>
+	</select>
+	<insert id="Member_insert">
+		<![CDATA[
+			INSERT INTO MEMBER VALUES(#{mid},#{mpw},#{mname},#{mmail})
+		]]>
+	</insert>
+
+
+	<select id="Member_selectOne" resultType="member">
+		<![CDATA[
+			SELECT * FROM MEMBER WHERE MID=#{mid} and MPW=#{mpw}
+		]]>
+	</select>
+
+	<select id="Member_selectAll" resultType="member">
+		<![CDATA[
+			SELECT * FROM MEMBER ORDER BY MID DESC
+		]]>
+	</select>
+	
+	<update id="Member_update">
+		<![CDATA[
+			UPDATE MEMBER SET MPW=#{mpw}, MMAIL=#{mmail} WHERE MID=#{mid}
+		]]>
+	</update>
+	
+	<delete id="Member_delete">
+		<![CDATA[
+			DELETE MEMBER WHERE MID=#{mid}
+		]]>
+	</delete>
+
+	<select id="Member_idSearch" resultType="member">
+		<![CDATA[
+			SELECT MID FROM MEMBER WHERE MNAME=#{mname} AND MMAIL=#{mmail}
+		]]>
+	</select>
+
+	<select id="Member_pwSearch" resultType="member">
+		<![CDATA[
+			SELECT MPW FROM MEMBER WHERE MID=#{mid} AND MNAME=#{mname} AND MMAIL=#{mmail}
+		]]>
+	</select>
+
+
+
+
+</mapper>
